@@ -6,6 +6,9 @@ int biomeExists(int mc, int id)
 {
     if (mc >= MC_1_18)
     {
+        // Terralith
+        if (id >= 54 && id <= 126 || id >= 187 && id <= 207) return 1;
+
         if (id >= soul_sand_valley && id <= basalt_deltas)
             return 1;
         if (id >= small_end_islands && id <= end_barrens)
@@ -183,6 +186,9 @@ int isOverworld(int mc, int id)
 {
     if (!biomeExists(mc, id))
         return 0;
+
+    // Terralith
+    if (id >= 54 && id <= 126 || id >= 187 && id <= 207) return 1;
 
     if (id >= small_end_islands && id <= end_barrens) return 0;
     if (id >= soul_sand_valley && id <= basalt_deltas) return 0;

@@ -109,8 +109,8 @@ STRUCT(FixSpline)
 
 STRUCT(SplineStack)
 {   // the stack size here is just sufficient for overworld generation
-    Spline stack[42];
-    FixSpline fstack[151];
+    Spline stack[50];
+    FixSpline fstack[160];
     int len, flen;
 };
 
@@ -129,8 +129,9 @@ enum
 STRUCT(BiomeNoise)
 {
     DoublePerlinNoise climate[NP_MAX];
-    PerlinNoise oct[2*23]; // buffer for octaves in double perlin noise
+    PerlinNoise oct[2*(23 + 10)]; // buffer for octaves in double perlin noise
     Spline *sp;
+    Spline *tsp; // Terralith
     SplineStack ss;
     int nptype;
     int mc;

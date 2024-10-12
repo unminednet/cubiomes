@@ -4,6 +4,7 @@
 #include "tables/btree192.h"
 #include "tables/btree19.h"
 #include "tables/btree20.h"
+#include "tables/btree20t.h"
 #include "tables/btree213.h"
 
 BiomeTree g_btree[MC_NEWEST - MC_1_18 + 1] =
@@ -20,9 +21,9 @@ BiomeTree g_btree[MC_NEWEST - MC_1_18 + 1] =
     // MC_1_20_6
     { btree20_steps, &btree20_param[0][0], btree20_nodes, btree20_order,
         sizeof(btree20_nodes) / sizeof(uint64_t) },
-    // MC_1_21_2
-    { btree20_steps, &btree20_param[0][0], btree20_nodes, btree20_order,
-        sizeof(btree20_nodes) / sizeof(uint64_t) },
+    // MC_1_21_2 (+Terralith)
+    { btree20t_steps, &btree20t_param[0][0], btree20t_nodes, btree20t_order,
+        sizeof(btree20t_nodes) / sizeof(uint64_t) },
     // MC_1_21_3
     { btree213_steps, &btree213_param[0][0], btree213_nodes, btree213_order,
         sizeof(btree213_nodes) / sizeof(uint64_t) },

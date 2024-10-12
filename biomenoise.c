@@ -854,7 +854,7 @@ static int init_climate_seed(
         } break;
 
     case NP_TEMPERATURE: {
-        static const double amp[] = {1.5, 0, 1, 0, 0, 0};
+        static const double amp[] = {1.3, 0, 1, 0, 1, 1};        
         // md5 "minecraft:temperature" or "minecraft:temperature_large"
         pxr.lo = xlo ^ (large ? 0x944b0073edf549db : 0x5c7e6b29735f0d7f);
         pxr.hi = xhi ^ (large ? 0x4ff44347e9d22b96 : 0xf7d86f1bbc734988);
@@ -862,11 +862,11 @@ static int init_climate_seed(
         } break;
 
     case NP_HUMIDITY: {
-        static const double amp[] = {1, 1, 0, 0, 0, 0};
+        static const double amp[] = {0.909, 1, 0, 1, 0, 1};
         // md5 "minecraft:vegetation" or "minecraft:vegetation_large"
         pxr.lo = xlo ^ (large ? 0x71b8ab943dbd5301 : 0x81bb4d22e8dc168e);
         pxr.hi = xhi ^ (large ? 0xbb63ddcf39ff7a2b : 0xf1c8b4bea16303cd);
-        n += xDoublePerlinInit(dpn, &pxr, oct, amp, large ? -10 : -8, 6, nmax);
+        n += xDoublePerlinInit(dpn, &pxr, oct, amp, large ? -10 : -9, 6, nmax);
         } break;
 
     case NP_CONTINENTALNESS: {
@@ -882,7 +882,7 @@ static int init_climate_seed(
         // md5 "minecraft:erosion" or "minecraft:erosion_large"
         pxr.lo = xlo ^ (large ? 0x8c984b1f8702a951 : 0xd02491e6058f6fd8);
         pxr.hi = xhi ^ (large ? 0xead7b1f92bae535f : 0x4792512c94c17a80);
-        n += xDoublePerlinInit(dpn, &pxr, oct, amp, large ? -11 : -9, 5, nmax);
+        n += xDoublePerlinInit(dpn, &pxr, oct, amp, large ? -11 : -10, 5, nmax);
         } break;
 
     case NP_WEIRDNESS: {
@@ -1126,7 +1126,13 @@ void initBiomeNoise(BiomeNoise *bn, int mc)
     addSplineVal(sp,  0.25F, sp3, 0.0F);
     addSplineVal(sp,  1.00F, sp4, 0.0F);
 
+    Spline *tsp = &ss->stack[ss->len++];
+    tsp->typ = SP_CONTINENTALNESS;
+    addSplineVal(tsp, -0.91F, createFixSpline(ss,  -1.05), 1);
+    addSplineVal(tsp, -0.8F, createFixSpline(ss,  -0.8), 1);
+
     bn->sp = sp;
+    bn->tsp = tsp;
     bn->mc = mc;
 }
 
@@ -1168,6 +1174,16 @@ int sampleBiomeNoise(const BiomeNoise *bn, int64_t *np, int x, int y, int z,
 
     t = sampleDoublePerlin(&bn->climate[NP_TEMPERATURE], px, 0, pz);
     h = sampleDoublePerlin(&bn->climate[NP_HUMIDITY], px, 0, pz);
+
+    // terralith
+    if ((c < -0.8f) && (e >= 0.4f)){
+        e = 0.4f + (1.485f * (e - 0.4f));
+    }    
+    // terralith
+    float vals[] = { c, 0, 0, 0, 0, 0 };
+    c = getSpline(bn->tsp, vals);
+
+
 
     int64_t l_np[6];
     int64_t *p_np = np ? np : l_np;
